@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:local="clr-namespace:FinanceTracker"
+             x:Class="FinanceTracker.MainPage">
+
+    <Grid Padding="20" RowSpacing="10" ColumnSpacing="20"
+          ColumnDefinitions="2*,*"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
+
+        <lvc:PieChart x:Name="pieChart"
+                      Grid.Column="1"
+                      Grid.Row="0"
+                      Grid.RowSpan="7"
+                      LegendPosition="Bottom"/>
+
+    
+        <HorizontalStackLayout Grid.Row="0" Spacing="10">
+            <Label Text="Motyw:" VerticalOptions="Center"
+                   TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+            <Picker x:Name="motyw" WidthRequest="200"
+                    SelectedIndexChanged="ChangeTheme">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Jasny</x:String>
+                        <x:String>Ciemny</x:String>
+                        <x:String>Systemowy</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+        </HorizontalStackLayout>
+
+        
+        <VerticalStackLayout Grid.Row="1" Spacing="6">
+            <HorizontalStackLayout Spacing="25">
+                <Label x:Name="budgetLabel" FontSize="20" FontAttributes="Bold"
+                       VerticalOptions="Center"/>
+                <Label x:Name="spentLabel" FontSize="20" VerticalOptions="Center"/>
+                <Label x:Name="remainingLabel" FontSize="20" FontAttributes="Bold"
+                       VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+            <ProgressBar x:Name="budgetProgress" HeightRequest="12"/>
+            <Button Text="Zmień budżet" Clicked="OnChangeBudgetClicked"
+                    HorizontalOptions="Start" WidthRequest="200"/>
+        </VerticalStackLayout>
+
+        <Label Grid.Row="2" FontSize="20"
+               Text="Wpisz kwotę i kategorię wydatku"/>
+
+        
+        <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="10">
+            <Entry x:Name="expance" Grid.Column="0" Keyboard="Numeric"
+                   Placeholder="Wpisz kwotę" Background="AliceBlue" TextColor="Black"/>
+            <Entry x:Name="category" Grid.Column="1"
+                   Placeholder="Wpisz kategorię" Background="AliceBlue" TextColor="Black"/>
+        </Grid>
+
+        <Button Grid.Row="4" Text="Dodaj wydatek" Clicked="AddExpenditure"
+                HorizontalOptions="Start" WidthRequest="200"/>
+
+        
+        <Grid Grid.Row="5" ColumnDefinitions="*,*,*" ColumnSpacing="10">
+            <Button x:Name="amountHeader" Grid.Column="0" Text="Kwota"
+                    CommandParameter="Amount" Clicked="OnSortClicked"/>
+            <Button x:Name="categoryHeader" Grid.Column="1" Text="Kategoria"
+                    CommandParameter="Category" Clicked="OnSortClicked"/>
+            <Button x:Name="dateHeader" Grid.Column="2" Text="Data"
+                    CommandParameter="Date" Clicked="OnSortClicked"/>
+        </Grid>
+
+        
+        <CollectionView x:Name="expenditureView" Grid.Row="6">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="local:Expenditure">
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10" Padding="0,5">
+                        <Label Grid.Column="0" FontSize="18" TextColor="Red"
+                               Text="{Binding Amount, StringFormat='-{0:N2} zł'}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Grid.Column="1" FontSize="18" Text="{Binding Category}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Grid.Column="2" FontSize="18"
+                               Text="{Binding Date, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
+                               HorizontalTextAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
